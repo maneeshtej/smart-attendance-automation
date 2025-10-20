@@ -24,7 +24,7 @@ const WhileScanning = ({
 }: {
   subjectId: string;
   onSuccess: (students: string[]) => void;
-  onError: () => void;
+  onError: (msg: string) => void;
 }) => {
   const [isScanning, setIsScanning] = useState(false);
   const [students, setStudents] = useState<string[]>([]);
@@ -77,7 +77,7 @@ const WhileScanning = ({
       bleEmitter.addListener('bleError', err => {
         console.error('[bleError]', err);
         safeSetLog(`[ERROR] ${err}`);
-        onError();
+        onError(err);
       }),
     ];
 
@@ -92,9 +92,9 @@ const WhileScanning = ({
         `[INFO] Started scan for subject ${subjectId}`,
         ...prev,
       ]);
-    } catch (err) {
+    } catch (err: any) {
       console.log('Failed to start BLE scan:', err);
-      onError();
+      onError(err?.message || 'Failed to start a scan');
     }
   };
 

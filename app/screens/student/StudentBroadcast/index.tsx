@@ -5,22 +5,25 @@ import Container from '../../../styles/components/Container';
 import BeforeScan from './module/BeforeScan';
 import WhileScanning from './module/WhileScanning';
 import AfterScan from './module/AfterScan';
+import ErrorScreen from './module/ErrorScreen';
 
 type ScanState = number;
 
 const StudentBroadcast = () => {
   const [subject, setSubject] = useState<string>('');
   const [scanState, setScanState] = useState<ScanState>(0);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleChangeState = (next: ScanState) => setScanState(next);
 
   const handleSuccess = (sub: string) => {
     setSubject(sub);
-    // Alert.alert(
-    //   'Submitted',
-    //   `${students.length} students captured:\n${students.join(', ')}`,
-    // );
-    handleChangeState(2); // go to AfterScan
+    handleChangeState(2);
+  };
+
+  const handleError = (msg?: string) => {
+    setErrorMsg(msg || 'A BLE error occurred during broadcast.');
+    handleChangeState(-1);
   };
 
   const renderContent = () => {
@@ -29,14 +32,21 @@ const StudentBroadcast = () => {
         return <BeforeScan handleChangeState={handleChangeState} />;
       case 1:
         return (
-          <WhileScanning
-            onSuccess={handleSuccess}
-            onError={() => handleChangeState(-1)}
-          />
+          <WhileScanning onSuccess={handleSuccess} onError={handleError} />
         );
       case 2:
         return (
           <AfterScan subject={subject} onReset={() => handleChangeState(0)} />
+        );
+      case -1:
+        return (
+          <ErrorScreen
+            message={errorMsg || undefined}
+            onRetry={() => {
+              setErrorMsg(null);
+              handleChangeState(0);
+            }}
+          />
         );
       default:
         return null;

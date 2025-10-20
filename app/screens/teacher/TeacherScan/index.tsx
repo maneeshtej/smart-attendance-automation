@@ -5,6 +5,7 @@ import Container from '../../../styles/components/Container';
 import BeforeScan from './module/BeforeScan';
 import WhileScanning from './module/WhileScanning';
 import AfterScan from './module/AfterScan';
+import ErrorScreen from './module/ErrorScreen';
 
 type ScanState = number;
 
@@ -12,6 +13,7 @@ const TeacherScan = () => {
   const [capturedStudents, setCapturedStudents] = useState<string[]>([]);
   const [scanState, setScanState] = useState<ScanState>(0);
   const [subject, setSubject] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleChangeState = (next: ScanState) => setScanState(next);
 
@@ -22,6 +24,11 @@ const TeacherScan = () => {
       `${students.length} students captured:\n${students.join(', ')}`,
     );
     handleChangeState(2); // go to AfterScan
+  };
+
+  const handleError = (msg?: string) => {
+    setErrorMsg(msg || 'An unknown BLE error occurred.');
+    handleChangeState(-1); // go to error screen
   };
 
   const renderContent = () => {
@@ -38,7 +45,7 @@ const TeacherScan = () => {
           <WhileScanning
             subjectId={subject || '000'}
             onSuccess={handleSuccess}
-            onError={() => handleChangeState(-1)}
+            onError={handleError}
           />
         );
       case 2:
@@ -47,6 +54,16 @@ const TeacherScan = () => {
             students={capturedStudents}
             subject={subject}
             onReset={() => handleChangeState(0)}
+          />
+        );
+      case -1:
+        return (
+          <ErrorScreen
+            message={errorMsg || undefined}
+            onRetry={() => {
+              setErrorMsg(null);
+              handleChangeState(0);
+            }}
           />
         );
       default:

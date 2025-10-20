@@ -23,7 +23,7 @@ const StudentScanning = ({
   onError,
 }: {
   onSuccess: (subjectId: string) => void;
-  onError: () => void;
+  onError: (msg: string) => void;
 }) => {
   const [isActive, setIsActive] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
@@ -46,10 +46,12 @@ const StudentScanning = ({
         console.log('[bleStatus]', msg);
         safeSetLog(`[STATUS] ${msg}`);
       }),
-      bleEmitter.addListener('bleError', err => {
+      bleEmitter.addListener('bleError', (err: any) => {
         console.error('[bleError]', err);
         safeSetLog(`[ERROR] ${err}`);
-        onError();
+        const msg =
+          typeof err === 'string' ? err : err?.message || 'Unknown BLE error';
+        onError(msg);
       }),
       bleEmitter.addListener('ackReceived', msg => {
         console.log('[ackReceived]', msg);
@@ -72,9 +74,9 @@ const StudentScanning = ({
       BleModule.startStudentMode(studentId.trim());
       setIsActive(true);
       safeSetLog(`[INFO] Started BLE as student ${studentId}`);
-    } catch (err) {
+    } catch (err: any) {
       console.log('Failed to start BLE:', err);
-      onError();
+      onError(err?.message);
     }
   };
 
