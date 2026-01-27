@@ -1,0 +1,20 @@
+import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import LoginScreen from '../screens/auth/LoginScreen';
+import LandingScreen from '../screens/auth/LandingScreen';
+import TeacherHomeScreen from '../screens/teacher/TeacherHomeScreen';
+
+const Stack = createNativeStackNavigator();
+
+export default function AuthRouter() {
+  return (
+    <Stack.Navigator
+      initialRouteName="Landing"
+      screenOptions={{ headerShown: false }}
+    >
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Landing" component={LandingScreen} />
+      <Stack.Screen name="Home" component={TeacherHomeScreen} />
+    </Stack.Navigator>
+  );
+}

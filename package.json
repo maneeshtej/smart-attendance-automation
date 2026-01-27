@@ -7,13 +7,25 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "patch-package"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-native/new-app-screen": "0.83.1",
+    "@react-navigation/native": "^7.1.28",
+    "@react-navigation/native-stack": "^7.10.1",
+    "@supabase/supabase-js": "^2.91.1",
     "react": "19.2.0",
     "react-native": "0.83.1",
-    "@react-native/new-app-screen": "0.83.1",
-    "react-native-safe-area-context": "^5.5.2"
+    "react-native-biometrics": "^3.0.1",
+    "react-native-ble-manager": "^12.4.4",
+    "react-native-ble-peripheral": "^2.0.1",
+    "react-native-dotenv": "^3.4.11",
+    "react-native-permissions": "^5.4.4",
+    "react-native-safe-area-context": "^5.6.2",
+    "react-native-screens": "^4.20.0",
+    "react-native-url-polyfill": "^3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
