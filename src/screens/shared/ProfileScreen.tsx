@@ -15,7 +15,7 @@ import * as authService from '../../services/authService';
 import { UserData, BaseUser } from '../../types/user';
 import { teacherService } from '../../services/teacherServices';
 import { studentService } from '../../services/studentServices';
-import { Colors } from '../../theme/colors';
+import { Colors } from '../../theme/colors'; 
 import { BaseSubject } from '../../types/subject';
 import { BaseClass } from '../../types/class';
 
