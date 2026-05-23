@@ -1,97 +1,204 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+Scalable Node Mesh App for Seamless Attendance Automation
 
-# Getting Started
+A BLE-powered smart attendance system built using React Native, TypeScript, Kotlin, Swift, and Supabase for seamless offline-first classroom attendance automation.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+<p align="center"> <img src="https://img.shields.io/badge/React%20Native-Mobile-blue?style=for-the-badge&logo=react" /> <img src="https://img.shields.io/badge/TypeScript-Strict-blue?style=for-the-badge&logo=typescript" /> <img src="https://img.shields.io/badge/BLE-Bluetooth%20Low%20Energy-purple?style=for-the-badge" /> <img src="https://img.shields.io/badge/Supabase-Backend-green?style=for-the-badge&logo=supabase" /> <img src="https://img.shields.io/badge/Offline%20First-Enabled-orange?style=for-the-badge" /> </p>
+Overview
 
-## Step 1: Start Metro
+Traditional attendance systems are slow, infrastructure-dependent, and vulnerable to proxy attendance.
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+This project introduces a decentralized BLE-based attendance framework where:
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+Student devices broadcast encrypted BLE identifiers
+Teacher devices scan nearby students
+Attendance is verified locally using proximity detection
+Sessions are stored offline and synced later to the cloud
 
-```sh
-# Using npm
-npm start
+The system works even without internet connectivity and eliminates the need for RFID hardware, Wi-Fi dependency, or manual roll calls.
 
-# OR using Yarn
-yarn start
-```
+Features
+BLE-Based Attendance Automation
+Real-time BLE advertisement & scanning
+RSSI-based proximity validation
+Teacher acknowledgment broadcasts
+Offline-First Architecture
+Local attendance persistence
+Manual cloud synchronization
+Works without internet
+Cross-Platform Support
+Android support using Kotlin BLE modules
+iOS support using Swift BLE modules
+Secure Attendance Validation
+Biometric / lock-screen verification
+Checksum validation
+Secure authentication using Supabase
+Modern Mobile Stack
+React Native + TypeScript
+Zustand persistence
+SQLite local caching
+Supabase backend integration
+Tech Stack
+Layer Technologies
+Frontend React Native, TypeScript
+Android Native Kotlin
+iOS Native Swift
+Backend Supabase
+Database PostgreSQL, SQLite
+State Management Zustand
+Version Control Git & GitHub
+Project Structure
+.
+├── **tests**
+│ └── App.test.tsx
+│
+├── android/ # Android native project
+├── ios/ # iOS native project
+│
+├── migrations/ # Supabase SQL migrations
+│ ├── 001_init.sql
+│ ├── 001.init_index.sql
+│ └── 002_init_rls.sql
+│
+├── patches/ # Patched dependencies
+│ └── react-native-ble-peripheral+2.0.1.patch
+│
+├── src
+│ ├── ble/ # BLE communication layer
+│ ├── components/ # Shared UI components
+│ ├── hooks/ # Custom hooks
+│ ├── lib/ # Utilities
+│ ├── navigation/ # Navigation setup
+│ ├── screens/ # App screens
+│ ├── services/ # API & sync services
+│ ├── theme/ # App theming
+│ └── types/ # Type definitions
+│
+├── App.tsx
+├── app.json
+├── package.json
+└── README.md
+BLE Communication Flow
+Student Device
 
-## Step 2: Build and run your app
+Student device continuously broadcasts:
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+AB:<studentID>:Z
 
-### Android
+After receiving acknowledgment:
 
-```sh
-# Using npm
+AC:<studentIDs>:<subjectID>:Z
+
+Attendance is marked locally.
+
+Teacher Device
+
+Teacher app:
+
+Scans nearby BLE advertisements
+Aggregates student IDs
+Verifies RSSI proximity
+Broadcasts ACK packets
+Stores attendance locally
+Syncs to Supabase later
+System Architecture
+┌──────────────────────┐
+│ Supabase │
+│ Auth • DB • Storage │
+└─────────┬────────────┘
+│ HTTPS / REST
+│
+┌────────▼─────────┐
+│ Teacher Device │
+│ React Native App │
+│ Kotlin BLE Layer │
+└────────┬─────────┘
+│ BLE
+│
+┌────────▼─────────┐
+│ Student Device │
+│ React Native App │
+│ Native BLE Layer │
+└──────────────────┘
+
+Attendance operates fully offline during sessions and synchronizes later when connectivity becomes available.
+
+Installation
+Clone Repository
+git clone <repository-url>
+cd <project-folder>
+Install Dependencies
+npm install
+Android Setup
 npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+iOS Setup
+cd ios
+pod install
+cd ..
 npm run ios
+Database Setup
 
-# OR using Yarn
-yarn ios
-```
+Run the migration files inside:
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+migrations/
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+Migration files:
 
-## Step 3: Modify your app
+001_init.sql
+001.init_index.sql
+002_init_rls.sql
+Testing & Validation
 
-Now that you have successfully run the app, let's make changes!
+The system was tested on:
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+Samsung S23
+OnePlus 11
+Vivo V23e 5G
+Realme 13 Pro 5G
+macOS BLE Emulator
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+Testing confirmed:
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+Stable BLE communication
+Reliable attendance verification
+Cross-device interoperability
+Offline synchronization stability
+Performance Metrics
+Metric Result
+Detection Latency ~0.8s – 1.2s
+Reliable BLE Range ~10m
+Packet Loss < 5%
+Battery Consumption < 3% / 10 min
+Sync Success Rate 100%
 
-## Congratulations! :tada:
+Security Features
+Biometric authentication
+Screen-lock verification
+RSSI-based filtering
+Checksum verification
+Secure cloud synchronization
+Offline local persistence
+Future Scope
+BLE Mesh multi-hop communication
+AI-assisted routing optimization
+Automated synchronization
+Analytics dashboards
+Enterprise-level scalability
+Authors
+Kappala Varshini Sekhar
+Lekkala Tej Sai Maneesh
 
-You've successfully run and modified your React Native App. :partying_face:
+Department of Computer Science and Engineering
+Nitte Meenakshi Institute of Technology, Bengaluru
 
-### Now what?
+Research & Publication
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+The project research paper titled:
 
-# Troubleshooting
+“Scalable Node Mesh App for Seamless Attendance Automation”
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+was presented at:
 
-# Learn More
+ICDSA’26 — Springer Nature Conference
+License
 
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+This project was developed as part of a Bachelor of Engineering final year academic project under VTU.
